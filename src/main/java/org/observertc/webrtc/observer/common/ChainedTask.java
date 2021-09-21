@@ -41,7 +41,7 @@ public class ChainedTask<T> extends TaskAbstract<T> {
             TaskStage stage = it.next();
             nextInput = stage.execute(nextInput);
             if (!stage.isExecuted()) {
-                throw new IllegalStateException("Execution of stage "+stage.toString()+" is interrupted du to not executed stage");
+                throw new IllegalStateException("Execution of stage "+stage.toString()+" is interrupted due to not executed stage");
             }
             if (this.doTerminate(stage, nextInput)) {
                 return this.resultHolder.get();
@@ -159,7 +159,7 @@ public class ChainedTask<T> extends TaskAbstract<T> {
 
         /**
          * Adds a predicate evaluated after the last added stage is executed.
-         * This Break Condition assumes that the last executed stage has an output, and taht is passed
+         * This Break Condition assumes that the last executed stage has an output, and that is passed
          * as part of the predicate to be evaluate.
          * If the breaking condition is true than the execution flow of the chained task breaks.
          * The resultHolder of the task is passed as a second parameter of the evaluated predicate.
@@ -177,16 +177,15 @@ public class ChainedTask<T> extends TaskAbstract<T> {
 
         /**
          * Adds a predicate evaluated after the last added stage is executed.
-         * This Break Condition assumes that the last executed stage has an output, and taht is passed
+         * This Break Condition assumes that the last executed stage has an output, and that is passed
          * as part of the predicate to be evaluate.
          * If the breaking condition is true than the execution flow of the chained task breaks.
          * The resultHolder of the task is passed as a parameter of the evaluated predicate.
          * If the breaking condition is false than the {@link ChainedTask} executes the successor stage
          * @param terminalCondition
-         * @param <U>
          * @return {@link Builder} this builder object
          */
-        public<U> Builder<R> addBreakCondition(Function<AtomicReference<R>, Boolean> terminalCondition) {
+        public Builder<R> addBreakCondition(Function<AtomicReference<R>, Boolean> terminalCondition) {
             this.result.addBreakCondition(null,terminalCondition);
             return this;
         }
@@ -232,7 +231,8 @@ public class ChainedTask<T> extends TaskAbstract<T> {
         public<U> Builder<R> addTerminalFunction(String stageName, Function<U, R> function) {
             this.requireNotTerminated();
             TaskStage stage = TaskStage.builder(stageName).withConsumer(inputObj -> {
-                R output = function.apply((U) inputObj);
+                U passed = (U) inputObj;
+                R output = function.apply(passed);
                 this.result.resultHolder.set(output);
             }).build();
             this.result.stages.add(stage);
@@ -386,7 +386,5 @@ public class ChainedTask<T> extends TaskAbstract<T> {
                 throw new IllegalStateException("The operation requires to not having any added stage before");
             }
         }
-
-
     }
 }

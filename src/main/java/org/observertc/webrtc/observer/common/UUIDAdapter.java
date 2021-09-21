@@ -50,6 +50,23 @@ public class UUIDAdapter {
 	}
 
 	/**
+	 * Make bytes from UUID, but returns defaultValue if UUID is null instead of throwing NullPointerExceptoin
+	 *
+	 * @param uuid
+	 * @return
+	 */
+	public static String toStringOrNull(UUID uuid) {
+		if (uuid == null) {
+			return null;
+		}
+		try {
+			return uuid.toString();
+		} catch (Exception ex) {
+			return null;
+		}
+	}
+
+	/**
 	 * Make UUID from bytes
 	 *
 	 * @param bytes
@@ -92,4 +109,14 @@ public class UUIDAdapter {
 			return Optional.empty();
 		}
 	}
+
+	public static UUID tryParseOrNull(String candidate) {
+		Optional<UUID> parsed = tryParse(candidate);
+		if (parsed.isEmpty()) {
+			return null;
+		} else {
+			return parsed.get();
+		}
+	}
+
 }

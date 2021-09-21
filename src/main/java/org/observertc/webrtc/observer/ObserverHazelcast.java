@@ -105,12 +105,6 @@ public class ObserverHazelcast {
 			}
 		}
 
-
-//		result.getSerializationConfig().getSerializerConfigs().add(
-//				new SerializerConfig().
-//						setTypeClass(CallEntity.class).
-//						setImplementation(new CallEntitySerializer()));
-//		result.getSerializationConfig().addPortableFactory(EntityFactory.FACTORY_ID, new EntityFactory());
 		result.getSerializationConfig().addPortableFactory(PortableDTOFactory.FACTORY_ID, new PortableDTOFactory());
 		return result;
 	}
